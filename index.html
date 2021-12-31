@@ -49,28 +49,29 @@
 
                 // Trace star.
                 if (document.getElementById('show_path').checked) {
-                    ctx.strokeStyle = 'green';
                     var steps = 1000;
-                    for (var i=0; i < star_vertices; i++) {
-                        var start_angle = 2 * Math.PI / star_vertices * i;
-                        ctx.beginPath();
-                        ctx.moveTo(
-                            canvas_centre[0] + Math.cos(start_angle) * (outer_radius - (1-offset) * radius),
-                            canvas_centre[1] - Math.sin(start_angle) * (outer_radius - (1-offset) * radius)
+                    ctx.strokeStyle = 'green';                                       
+                    for (var j=0; j < star_gcd; j++) {
+                    ctx.beginPath();
+                    var angleoffset = 2 * Math.PI / star_vertices * j;
+                    ctx.moveTo(
+                       canvas_centre[0] + Math.cos(angleoffset) * (outer_radius - (1-offset) * radius), 
+                    				canvas_centre[1] - Math.sin(angleoffset) * (outer_radius - (1-offset) * radius)
+                    				);
+                    for (var i=0; i<loops*steps; i++) {
+                        var angle = angleoffset + 2 * Math.PI / steps * i;
+                        var inner_centre = [
+                            canvas_centre[0] + Math.cos(angle) * (outer_radius - radius),
+                            canvas_centre[1] - Math.sin(angle) * (outer_radius - radius)
+                        ];
+                        var inner_angle = angleoffset - 2 * Math.PI / steps * i * inner_velocity;
+                        ctx.lineTo(
+                            inner_centre[0] + offset * radius * Math.cos(inner_angle),
+                            inner_centre[1] - offset * radius * Math.sin(inner_angle)
                         );
-                        for (var j=0; j<steps; j++) {
-                            var angle = start_angle + 2 * circumference_multiple * Math.PI / steps * j;
-                            var inner_angle = start_angle - 2 * circumference_multiple * Math.PI / steps * j * inner_velocity;
-                            var inner_centre = [
-                                canvas_centre[0] + Math.cos(angle) * (outer_radius - radius),
-                                canvas_centre[1] - Math.sin(angle) * (outer_radius - radius)
-                            ];
-                            ctx.lineTo(
-                                inner_centre[0] + offset * radius * Math.cos(inner_angle),
-                                inner_centre[1] - offset * radius * Math.sin(inner_angle)
-                            );
-                        }
-                        ctx.stroke();
+                    }
+                    // ctx.closePath();                 
+                    ctx.stroke();
                     }
                 }
             }
